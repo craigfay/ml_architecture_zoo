@@ -30,8 +30,16 @@ model = tf.keras.models.Sequential([
 non_normalized_predictions = model(x_train[:1]).numpy()
 predictions = tf.nn.softmax(non_normalized_predictions).numpy()
 
-# This loss function needs a logit vector, and the index of the correct answer
+# This loss function needs a logit vector, and the index of the correct answer.
+# With  loss functions, near-zero values indicate correctness.
 loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 
-loss = loss_fn(y_train[:1], predictions).numpy()
+# What does Model.compile() do?
+model.compile(optimizer='adam',
+              loss=loss_fn,
+              metrics=['accuracy'])
+
+# "Model.fit method adjusts the model parameters to minimize the loss"
+# Which parameters are being adjusted?
+model.fit(x_train, y_train, epochs=5)
 
