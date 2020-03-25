@@ -7,9 +7,11 @@ import tensorflow as tf
 mnist = tf.keras.datasets.mnist
 
 
-# Values in the input matrix are are between 0 and 255,
-# so we'll divide to get values between 0 and 1 instead
+# x_train is an array of inputs, y_train is an array of correct outputs
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+# Values in the input matrix are are between 0 and 255,
+# so we'll divide to get values between 0 and 1 instead.
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
 # Tell keras which float type to use
@@ -27,4 +29,9 @@ model = tf.keras.models.Sequential([
 # indicates that we want to differentiate between 10 classes if input.
 non_normalized_predictions = model(x_train[:1]).numpy()
 predictions = tf.nn.softmax(non_normalized_predictions).numpy()
+
+# This loss function needs a logit vector, and the index of the correct answer
+loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+
+loss = loss_fn(y_train[:1], predictions).numpy()
 
